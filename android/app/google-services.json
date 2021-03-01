@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "808635764507",
+    "firebase_url": "https://ride-sharing-90212-default-rtdb.firebaseio.com",
+    "project_id": "ride-sharing-90212",
+    "storage_bucket": "ride-sharing-90212.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808635764507:android:22a3316263f88284c70dbe",
+        "android_client_info": {
+          "package_name": "dev.jsfsarkis.ride_share"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808635764507-omkphaiggvibng25fbtfkepue8u8m1ue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMWlvNTB8F5PWPoEK-7yvX4g5GuZaSiE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808635764507-omkphaiggvibng25fbtfkepue8u8m1ue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
