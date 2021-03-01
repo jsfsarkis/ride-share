@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ride_share/components/general_textfield.dart';
+import 'package:ride_share/components/progress_dialog.dart';
 import 'package:ride_share/components/rounded_button.dart';
 import 'package:ride_share/screens/login_screen.dart';
 
@@ -36,19 +37,29 @@ class RegistrationScreen extends StatelessWidget {
 
   //to be refactored into services
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  void registerUser() async {
+  void registerUser(BuildContext context) async {
+    //show dialog
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) =>
+          ProgressDialog(status: 'Logging you in'),
+    );
+
     final User user = (await _auth
             .createUserWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
     )
             .catchError((e) {
+      Navigator.pop(context);
       PlatformException exception = e;
       showSnackBar(exception.message);
     }))
         .user;
 
     if (user != null) {
+      Navigator.pop(context);
       DatabaseReference newUserRef =
           FirebaseDatabase.instance.reference().child('users/${user.uid}');
 
@@ -147,7 +158,7 @@ class RegistrationScreen extends StatelessWidget {
                       showSnackBar('Please provide a valid password');
                       return;
                     }
-                    registerUser();
+                    registerUser(context);
                   },
                   width: MediaQuery.of(context).size.width / 2,
                   height: 40.0,

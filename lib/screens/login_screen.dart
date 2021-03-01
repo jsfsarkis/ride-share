@@ -4,8 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:ride_share/components/general_textfield.dart';
+import 'package:ride_share/components/progress_dialog.dart';
 import 'package:ride_share/components/rounded_button.dart';
 import 'package:ride_share/constants.dart';
 import 'package:ride_share/screens/home_screen.dart';
@@ -35,10 +37,20 @@ class LoginScreen extends StatelessWidget {
   }
 
   void login(BuildContext context) async {
+
+    //show dialog
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => ProgressDialog(status: 'Logging you in'),
+    );
+
     final User user = (await _auth.signInWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
     ).catchError((e) {
+      // navigator to pop the progress dialog in case of error
+      Navigator.pop(context);
       PlatformException exception = e;
       showSnackBar(exception.message);
     }))
@@ -51,7 +63,7 @@ class LoginScreen extends StatelessWidget {
       userRef.once().then((DataSnapshot snapshot) => {
             if (snapshot.value != null)
               {
-                Navigator.pushNamedAndRemoveUntil(
+                 Navigator.pushNamedAndRemoveUntil(
                     context, HomeScreen.id, (route) => false)
               }
           });
