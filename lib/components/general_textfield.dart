@@ -5,16 +5,19 @@ class GeneralTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool obscureText;
   final String hintText;
+  final TextEditingController controller;
 
   GeneralTextField({
     @required this.onChanged,
     @required this.keyboardType,
     @required this.obscureText,
     @required this.hintText,
+    this.controller,
   });
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
       decoration: InputDecoration(
