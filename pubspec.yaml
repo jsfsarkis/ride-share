@@ -24,5 +24,16 @@ dev_dependencies:
 
 flutter:
 
-
   uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Brand-Bold
+      fonts:
+        - asset: assets/fonts/bolt-semibold.ttf
+        - weight: 700
+    - family: Brand-Regular
+      fonts:
+        - asset: assets/fonts/bolt-regular.ttf

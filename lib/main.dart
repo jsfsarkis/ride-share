@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:ride_share/constants.dart';
 import 'package:ride_share/screens/home_screen.dart';
+import 'package:ride_share/screens/login_screen.dart';
+import 'package:ride_share/screens/registration_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,9 +36,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        fontFamily: RegularFont,
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: RegistrationScreen(),
     );
   }
 }
