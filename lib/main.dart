@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         fontFamily: RegularFont,
         primarySwatch: Colors.blue,
       ),
-      initialRoute: RegistrationScreen.id,
+      initialRoute: HomeScreen.id,
       routes: {
         RegistrationScreen.id: (context) => RegistrationScreen(),
         LoginScreen.id: (context) => LoginScreen(),

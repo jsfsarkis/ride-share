@@ -24,3 +24,5 @@ const Color colorGreen = Color(0xFF40cf89);
 const Color colorLightGray = Color(0xFFe2e2e2);
 const Color colorLightGrayFair = Color(0xFFe1e5e8);
 const Color colorDimText = Color(0xFFadadad);
+
+const String mapKey = 'AIzaSyDRpJdMV5PCQss_t5HmstTNHK5lLmOIItA';
