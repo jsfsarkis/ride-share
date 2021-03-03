@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.jsfsarkis.ride_share">
-   <application
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
         android:label="ride_share"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -39,7 +40,7 @@
             android:value="2" />
 
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyDRpJdMV5PCQss_t5HmstTNHK5lLmOIItA"/>
+           android:value="AIzaSyB1wn7gcNBpxeBM9MY3_EMXoP-woMMIFnU"/>
 
     </application>
 </manifest>
