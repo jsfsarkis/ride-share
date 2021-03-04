@@ -20,9 +20,12 @@ class HomeScreen extends StatelessWidget {
 
   GoogleMapController mapController;
 
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       drawer: Container(
         width: 250,
         color: Colors.white,
@@ -124,6 +127,37 @@ class HomeScreen extends StatelessWidget {
               _controller.complete(controller);
               mapController = controller;
             },
+          ),
+          Positioned(
+            top: 55.0,
+            left: 20.0,
+            child: GestureDetector(
+              onTap: () {
+                scaffoldKey.currentState.openDrawer();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 5.0,
+                      spreadRadius: 0.5,
+                      offset: Offset(0.7, 0.7),
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 20,
+                  child: Icon(
+                    Icons.menu,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
           ),
           Positioned(
             left: 0,
