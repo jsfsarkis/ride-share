@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:ride_share/components/divider_line.dart';
+import 'package:ride_share/helpers/helper_methods.dart';
 
 import '../constants.dart';
 
@@ -39,6 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     CameraPosition cameraPosition = CameraPosition(target: pos, zoom: 14.0);
     mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+    String address = await HelperMethods.findCoordinateAddress(position);
+    print(address);
   }
 
   @override
