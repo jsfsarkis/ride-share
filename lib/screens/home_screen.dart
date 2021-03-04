@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:ride_share/components/divider_line.dart';
 
 import '../constants.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
 
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -16,11 +17,29 @@ class HomeScreen extends StatelessWidget {
     zoom: 14.4746,
   );
 
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   Completer<GoogleMapController> _controller = Completer();
 
   GoogleMapController mapController;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Position currentPosition;
+
+  void getCurrentPosition() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+    currentPosition = position;
+
+    LatLng pos = LatLng(position.latitude, position.longitude);
+
+    CameraPosition cameraPosition = CameraPosition(target: pos, zoom: 14.0);
+    mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,18 +138,24 @@ class HomeScreen extends StatelessWidget {
         children: [
           GoogleMap(
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height / 2.89),
+              bottom: MediaQuery.of(context).size.height / 2.85,
+              top: MediaQuery.of(context).size.height / 1.7,
+            ),
             mapType: MapType.normal,
             myLocationButtonEnabled: true,
-            initialCameraPosition: _kGooglePlex,
+            myLocationEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            initialCameraPosition: HomeScreen._kGooglePlex,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
               mapController = controller;
+              getCurrentPosition();
             },
           ),
           Positioned(
-            top: 55.0,
-            left: 20.0,
+            top: MediaQuery.of(context).size.width / 7,
+            left: MediaQuery.of(context).size.width / 20,
             child: GestureDetector(
               onTap: () {
                 scaffoldKey.currentState.openDrawer();
@@ -164,7 +189,7 @@ class HomeScreen extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: Container(
-              height: MediaQuery.of(context).size.height / 2.97,
+              height: MediaQuery.of(context).size.height / 2.9,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
