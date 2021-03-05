@@ -252,7 +252,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Add Home'),
+                            Text(
+                                geocodingService.pickupAddress.placeName != null
+                                    ? geocodingService.pickupAddress.placeName
+                                    : 'Add Home'),
                             SizedBox(height: 3),
                             Text(
                               'Your residential address',
