@@ -139,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
               mapController = controller;
+              MapMethods.animateMapCamera(MapMethods.position, mapController);
             },
           ),
           Positioned(
