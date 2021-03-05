@@ -6,6 +6,7 @@ import 'package:ride_share/constants.dart';
 import 'package:ride_share/screens/home_screen.dart';
 import 'package:ride_share/screens/login_screen.dart';
 import 'package:ride_share/screens/registration_screen.dart';
+import 'package:ride_share/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,8 +42,9 @@ class MyApp extends StatelessWidget {
         fontFamily: RegularFont,
         primarySwatch: Colors.blue,
       ),
-      initialRoute: HomeScreen.id,
+      initialRoute: SplashScreen.id,
       routes: {
+        SplashScreen.id: (context) => SplashScreen(),
         RegistrationScreen.id: (context) => RegistrationScreen(),
         LoginScreen.id: (context) => LoginScreen(),
         HomeScreen.id: (context) => HomeScreen(),
