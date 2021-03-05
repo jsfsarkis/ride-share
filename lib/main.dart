@@ -2,11 +2,15 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ride_share/constants.dart';
 import 'package:ride_share/screens/home_screen.dart';
 import 'package:ride_share/screens/login_screen.dart';
 import 'package:ride_share/screens/registration_screen.dart';
 import 'package:ride_share/screens/splash_screen.dart';
+import 'package:ride_share/services/geocoding_service.dart';
+
+import 'helpers/map_methods.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,19 +40,24 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    child:
-    MaterialApp(
-      theme: ThemeData(
-        fontFamily: RegularFont,
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ListenableProvider(create: (context) => GeocodingService()),
+        Provider<MapMethods>(create: (context) => MapMethods()),
+      ],
+      child: MaterialApp(
+        theme: ThemeData(
+          fontFamily: RegularFont,
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: SplashScreen.id,
+        routes: {
+          SplashScreen.id: (context) => SplashScreen(),
+          RegistrationScreen.id: (context) => RegistrationScreen(),
+          LoginScreen.id: (context) => LoginScreen(),
+          HomeScreen.id: (context) => HomeScreen(),
+        },
       ),
-      initialRoute: SplashScreen.id,
-      routes: {
-        SplashScreen.id: (context) => SplashScreen(),
-        RegistrationScreen.id: (context) => RegistrationScreen(),
-        LoginScreen.id: (context) => LoginScreen(),
-        HomeScreen.id: (context) => HomeScreen(),
-      },
     );
   }
 }
