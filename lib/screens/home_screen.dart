@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:ride_share/components/divider_line.dart';
-import 'package:ride_share/helpers/helper_methods.dart';
 
 import '../constants.dart';
 
@@ -24,27 +22,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Completer<GoogleMapController> _controller = Completer();
-
   GoogleMapController mapController;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Position currentPosition;
-
-  void getCurrentPosition() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
-    currentPosition = position;
-
-    LatLng pos = LatLng(position.latitude, position.longitude);
-
-    CameraPosition cameraPosition = CameraPosition(target: pos, zoom: 14.0);
-    mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-
-    String address = await HelperMethods.findCoordinateAddress(position);
-    print(address);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,7 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
               mapController = controller;
-              getCurrentPosition();
             },
           ),
           Positioned(
@@ -163,6 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: GestureDetector(
               onTap: () {
                 scaffoldKey.currentState.openDrawer();
+                ;
               },
               child: Container(
                 decoration: BoxDecoration(
