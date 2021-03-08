@@ -7,6 +7,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_share/components/divider_line.dart';
 import 'package:ride_share/helpers/map_methods.dart';
+import 'package:ride_share/screens/search_screen.dart';
 import 'package:ride_share/services/geocoding_service.dart';
 
 import '../constants.dart';
@@ -214,30 +215,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     SizedBox(height: 20.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 5.0,
-                            spreadRadius: 0.5,
-                            offset: Offset(
-                              0.7,
-                              0.7,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, SearchScreen.id);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 5.0,
+                              spreadRadius: 0.5,
+                              offset: Offset(
+                                0.7,
+                                0.7,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.search, color: Colors.blueAccent),
-                            SizedBox(width: 10.0),
-                            Text('Search Destination')
                           ],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.search, color: Colors.blueAccent),
+                              SizedBox(width: 10.0),
+                              Text('Search Destination')
+                            ],
+                          ),
                         ),
                       ),
                     ),
