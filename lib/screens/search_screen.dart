@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_share/services/geocoding_service.dart';
+import 'package:ride_share/services/network_service.dart';
 
 import '../constants.dart';
 
@@ -21,6 +22,19 @@ class _SearchScreenState extends State<SearchScreen> {
     if (!focused) {
       FocusScope.of(context).requestFocus(destinationFieldFocus);
       focused = true;
+    }
+  }
+
+  void searchPlace(String placeName) async {
+    if (placeName.length > 1) {
+      String url =
+          'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=123254251&components=country:lb';
+      var response = await NetworkService.httpGetRequest(url);
+
+      if (response == 'failed') {
+        return;
+      }
+      print(response);
     }
   }
 
@@ -120,6 +134,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(4.0),
                           ),
                           child: TextField(
+                            onChanged: (value) {
+                              searchPlace(value);
+                            },
                             focusNode: destinationFieldFocus,
                             controller: destinationFieldController,
                             decoration: InputDecoration(
