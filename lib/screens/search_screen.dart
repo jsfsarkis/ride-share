@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_share/services/geocoding_service.dart';
 
 import '../constants.dart';
 
@@ -9,8 +11,25 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  TextEditingController pickupFieldController = TextEditingController();
+  TextEditingController destinationFieldController = TextEditingController();
+
+  FocusNode destinationFieldFocus = FocusNode();
+
+  bool focused = false;
+  void setFocus() {
+    if (!focused) {
+      FocusScope.of(context).requestFocus(destinationFieldFocus);
+      focused = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    setFocus();
+    var geocodingService = Provider.of<GeocodingService>(context);
+    String pickupAddress = geocodingService.pickupAddress.placeName;
+    pickupFieldController.text = pickupAddress;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -67,6 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(4.0),
                           ),
                           child: TextField(
+                            controller: pickupFieldController,
                             decoration: InputDecoration(
                               hintText: 'Pickup Location',
                               fillColor: colorLightGrayFair,
@@ -100,6 +120,8 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(4.0),
                           ),
                           child: TextField(
+                            focusNode: destinationFieldFocus,
+                            controller: destinationFieldController,
                             decoration: InputDecoration(
                               hintText: 'Where to?',
                               fillColor: colorLightGrayFair,
