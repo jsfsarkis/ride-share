@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_share/models/address_prediction_model.dart';
 import 'package:ride_share/services/geocoding_service.dart';
 import 'package:ride_share/services/network_service.dart';
 
@@ -34,7 +35,15 @@ class _SearchScreenState extends State<SearchScreen> {
       if (response == 'failed') {
         return;
       }
-      print(response);
+
+      if (response['status'] == 'OK') {
+        var predictionsJson = response['predictions'];
+
+        var predictionsList = (predictionsJson as List)
+            .map((e) => AddressPredictionModel.fromJson(e))
+            .toList();
+        print(predictionsList[1].mainText);
+      }
     }
   }
 
