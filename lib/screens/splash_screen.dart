@@ -39,7 +39,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var geocodingService = Provider.of<GeocodingService>(context);
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(

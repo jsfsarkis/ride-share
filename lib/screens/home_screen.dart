@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var geocodingService = Provider.of<GeocodingService>(context);
-    var mapMethods = Provider.of<MapMethods>(context);
     return Scaffold(
       key: scaffoldKey,
       drawer: Container(
@@ -149,7 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: GestureDetector(
               onTap: () {
                 scaffoldKey.currentState.openDrawer();
-                ;
               },
               child: Container(
                 decoration: BoxDecoration(
