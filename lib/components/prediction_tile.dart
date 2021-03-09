@@ -29,6 +29,7 @@ class PredictionTile extends StatelessWidget {
                             ? addressPrediction.mainText
                             : '',
                         overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         style: TextStyle(fontSize: 18.0, fontFamily: BoldFont),
                       ),
                       SizedBox(height: 2.0),
@@ -36,6 +37,8 @@ class PredictionTile extends StatelessWidget {
                         addressPrediction.secondaryText != null
                             ? addressPrediction.secondaryText
                             : '',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         style: TextStyle(
                           fontSize: 12.0,
                           color: colorDimText,
