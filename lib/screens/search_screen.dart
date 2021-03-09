@@ -27,31 +27,7 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-  // List<AddressPredictionModel> addressPredictionList = [];
-
-  // void searchPlace(String placeName) async {
-  //   if (placeName.length > 1) {
-  //     String url =
-  //         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=123254251&components=country:lb';
-  //     var response = await NetworkService.httpGetRequest(url);
-  //
-  //     if (response == 'failed') {
-  //       return;
-  //     }
-  //
-  //     if (response['status'] == 'OK') {
-  //       var predictionsJson = response['predictions'];
-  //
-  //       var predictionsList = (predictionsJson as List)
-  //           .map((e) => AddressPredictionModel.fromJson(e))
-  //           .toList();
-  //
-  //       setState(() {
-  //         addressPredictionList = predictionsList;
-  //       });
-  //     }
-  //   }
-  // }
+  String searchValue;
 
   @override
   Widget build(BuildContext context) {
@@ -154,11 +130,6 @@ class _SearchScreenState extends State<SearchScreen> {
                             child: TextField(
                               onChanged: (value) {
                                 placesService.searchPlace(value);
-                                if (value == '') {
-                                  setState(() {
-                                    placesService.addressPredictionList.clear();
-                                  });
-                                }
                               },
                               focusNode: destinationFieldFocus,
                               controller: destinationFieldController,
@@ -183,7 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-            (placesService.addressPredictionList.length <= 0)
+            (placesService.addressPredictionList.isEmpty == true)
                 ? Container()
                 : Padding(
                     padding: EdgeInsets.symmetric(

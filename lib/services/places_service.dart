@@ -25,7 +25,7 @@ class PlacesService extends ChangeNotifier {
     this.destinationAddress.isPlaceName = isPlaceName;
   }
 
-  void searchPlace(String placeName) async {
+  Future<dynamic> searchPlace(String placeName) async {
     if (placeName.length > 1) {
       String url =
           'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=123254251&components=country:lb';
@@ -41,8 +41,13 @@ class PlacesService extends ChangeNotifier {
         var predictionsList = (predictionsJson as List)
             .map((e) => AddressPredictionModel.fromJson(e))
             .toList();
-        addressPredictionList = predictionsList;
-        notifyListeners();
+        if (placeName.length > 2) {
+          addressPredictionList = predictionsList;
+          notifyListeners();
+        } else {
+          addressPredictionList.clear();
+          notifyListeners();
+        }
       }
     }
   }
