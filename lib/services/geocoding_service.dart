@@ -11,7 +11,7 @@ class GeocodingService extends ChangeNotifier {
   AddressModel pickupAddress = AddressModel(isPlaceName: false);
 
   // set the pickup address field values
-  void setAddress({
+  void setPickupAddress({
     String id,
     String placeName,
     double latitude,
@@ -44,7 +44,7 @@ class GeocodingService extends ChangeNotifier {
     var response = await NetworkService.httpGetRequest(url);
     if (response != 'failed') {
       String placeAddress = response['results'][0]['formatted_address'];
-      setAddress(
+      setPickupAddress(
         latitude: position.latitude,
         longitude: position.longitude,
         placeName: placeAddress,

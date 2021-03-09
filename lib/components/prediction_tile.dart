@@ -1,13 +1,34 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:ride_share/models/address_model.dart';
 import 'package:ride_share/models/address_prediction_model.dart';
+import 'package:ride_share/services/network_service.dart';
 
 import '../constants.dart';
 
 class PredictionTile extends StatelessWidget {
   final AddressPredictionModel addressPrediction;
   PredictionTile({this.addressPrediction});
+
+  void getPlaceDetails(String placeId) async {
+    String url =
+        'https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeId&key=$mapKey';
+
+    var response = await NetworkService.httpGetRequest(url);
+
+    if (response == 'failed') {
+      return;
+    }
+
+    if (response['status'] == 'OK') {
+      AddressModel thisPlace = AddressModel();
+      thisPlace.placeName = response['result']['name'];
+      thisPlace.id = placeId;
+      thisPlace.latitude = response['result']['geometry']['location']['lat'];
+      thisPlace.latitude = response['result']['geometry']['location']['lng'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

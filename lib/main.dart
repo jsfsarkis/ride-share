@@ -10,6 +10,7 @@ import 'package:ride_share/screens/registration_screen.dart';
 import 'package:ride_share/screens/search_screen.dart';
 import 'package:ride_share/screens/splash_screen.dart';
 import 'package:ride_share/services/geocoding_service.dart';
+import 'package:ride_share/services/places_service.dart';
 
 import 'helpers/map_methods.dart';
 
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ListenableProvider(create: (context) => GeocodingService()),
+        ListenableProvider(create: (context) => PlacesService()),
         Provider<MapMethods>(create: (context) => MapMethods()),
       ],
       child: MaterialApp(

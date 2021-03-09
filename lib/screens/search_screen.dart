@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_share/components/divider_line.dart';
 import 'package:ride_share/components/prediction_tile.dart';
-import 'package:ride_share/models/address_prediction_model.dart';
 import 'package:ride_share/services/geocoding_service.dart';
-import 'package:ride_share/services/network_service.dart';
+import 'package:ride_share/services/places_service.dart';
 
 import '../constants.dart';
 
@@ -28,35 +27,36 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-  List<AddressPredictionModel> addressPredictionList = [];
+  // List<AddressPredictionModel> addressPredictionList = [];
 
-  void searchPlace(String placeName) async {
-    if (placeName.length > 1) {
-      String url =
-          'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=123254251&components=country:lb';
-      var response = await NetworkService.httpGetRequest(url);
-
-      if (response == 'failed') {
-        return;
-      }
-
-      if (response['status'] == 'OK') {
-        var predictionsJson = response['predictions'];
-
-        var predictionsList = (predictionsJson as List)
-            .map((e) => AddressPredictionModel.fromJson(e))
-            .toList();
-
-        setState(() {
-          addressPredictionList = predictionsList;
-        });
-      }
-    }
-  }
+  // void searchPlace(String placeName) async {
+  //   if (placeName.length > 1) {
+  //     String url =
+  //         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=123254251&components=country:lb';
+  //     var response = await NetworkService.httpGetRequest(url);
+  //
+  //     if (response == 'failed') {
+  //       return;
+  //     }
+  //
+  //     if (response['status'] == 'OK') {
+  //       var predictionsJson = response['predictions'];
+  //
+  //       var predictionsList = (predictionsJson as List)
+  //           .map((e) => AddressPredictionModel.fromJson(e))
+  //           .toList();
+  //
+  //       setState(() {
+  //         addressPredictionList = predictionsList;
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     setFocus();
+    var placesService = Provider.of<PlacesService>(context);
     var geocodingService = Provider.of<GeocodingService>(context);
     String pickupAddress = geocodingService.pickupAddress.placeName;
     pickupFieldController.text = pickupAddress;
@@ -153,10 +153,10 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                             child: TextField(
                               onChanged: (value) {
-                                searchPlace(value);
+                                placesService.searchPlace(value);
                                 if (value == '') {
                                   setState(() {
-                                    addressPredictionList.clear();
+                                    placesService.addressPredictionList.clear();
                                   });
                                 }
                               },
@@ -183,7 +183,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-            (addressPredictionList.length <= 0)
+            (placesService.addressPredictionList.length <= 0)
                 ? Container()
                 : Padding(
                     padding: EdgeInsets.symmetric(
@@ -194,12 +194,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       padding: EdgeInsets.all(0),
                       itemBuilder: (context, index) {
                         return PredictionTile(
-                          addressPrediction: addressPredictionList[index],
+                          addressPrediction:
+                              placesService.addressPredictionList[index],
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) =>
                           DividerLine(),
-                      itemCount: addressPredictionList.length,
+                      itemCount: placesService.addressPredictionList.length,
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
                     ),
