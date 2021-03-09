@@ -20,31 +20,30 @@ class PredictionTile extends StatelessWidget {
               children: [
                 Icon(OMIcons.locationOn, color: colorDimText),
                 SizedBox(width: 12.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      child: Text(
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                         addressPrediction.mainText != null
                             ? addressPrediction.mainText
                             : '',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 18.0, fontFamily: BoldFont),
                       ),
-                    ),
-                    SizedBox(height: 2.0),
-                    Text(
-                      addressPrediction.secondaryText != null
-                          ? addressPrediction.secondaryText
-                          : '',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: colorDimText,
-                        fontFamily: BoldFont,
+                      SizedBox(height: 2.0),
+                      Text(
+                        addressPrediction.secondaryText != null
+                            ? addressPrediction.secondaryText
+                            : '',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: colorDimText,
+                          fontFamily: BoldFont,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
