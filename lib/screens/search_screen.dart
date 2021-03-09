@@ -185,17 +185,24 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             (addressPredictionList.length <= 0)
                 ? Container()
-                : ListView.separated(
-                    itemBuilder: (context, index) {
-                      return PredictionTile(
-                        addressPrediction: addressPredictionList[index],
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        DividerLine(),
-                    itemCount: addressPredictionList.length,
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
+                : Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 8.0,
+                      horizontal: 16.0,
+                    ),
+                    child: ListView.separated(
+                      padding: EdgeInsets.all(0),
+                      itemBuilder: (context, index) {
+                        return PredictionTile(
+                          addressPrediction: addressPredictionList[index],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          DividerLine(),
+                      itemCount: addressPredictionList.length,
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                    ),
                   ),
           ],
         ),
