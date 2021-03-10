@@ -25,7 +25,7 @@ class MapMethods {
     mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
-  static Future<DirectionsModel> getDirectionsDetails(
+  static Future<DirectionsModel> getDirections(
       LatLng startingPosition, LatLng endPosition) async {
     String url =
         'https://maps.googleapis.com/maps/api/directions/json?origin=${startingPosition.latitude},${startingPosition.longitude}&destination=${endPosition.latitude},${endPosition.longitude}&mode=driving&key=$mapKey';
