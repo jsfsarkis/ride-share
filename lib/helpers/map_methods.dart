@@ -45,7 +45,7 @@ class MapMethods {
     directions.distanceText =
         response['routes'][0]['legs'][0]['distance']['text'];
     directions.distanceValue =
-        response['routes'][0]['legs'][0]['distance']['text'];
+        response['routes'][0]['legs'][0]['distance']['value'];
 
     directions.encodedPoints =
         response['routes'][0]['overview_polyline']['points'];
