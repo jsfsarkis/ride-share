@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
@@ -61,8 +62,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Navigator.pop(context);
 
-    print(details.encodedPoints);
+    PolylinePoints polylinePoints = PolylinePoints();
+    List<PointLatLng> results =
+        polylinePoints.decodePolyline(details.encodedPoints);
+
+    polylineCoordinates.clear();
+
+    if (results.isNotEmpty) {
+      results.forEach((element) {
+        polylineCoordinates.add(LatLng(element.latitude, element.longitude));
+      });
+    }
+
+    _polylines.clear();
+
+    setState(() {
+      Polyline polyline = Polyline(
+        polylineId: PolylineId('polyid'),
+        color: Colors.red,
+        points: polylineCoordinates,
+        jointType: JointType.round,
+        width: 4,
+        startCap: Cap.roundCap,
+        endCap: Cap.roundCap,
+        geodesic: false,
+      );
+
+      _polylines.add(polyline);
+    });
   }
+
+  List<LatLng> polylineCoordinates = [];
+  Set<Polyline> _polylines = {};
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mapController = controller;
               MapMethods.animateMapCamera(MapMethods.position, mapController);
             },
+            polylines: _polylines,
           ),
           Positioned(
             top: MediaQuery.of(context).size.width / 7,
