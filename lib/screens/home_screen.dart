@@ -85,11 +85,38 @@ class _HomeScreenState extends State<HomeScreen> {
         width: 4,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
-        geodesic: false,
+        geodesic: true,
       );
 
       _polylines.add(polyline);
     });
+
+    LatLngBounds bounds;
+
+    if (pickupLatLng.latitude > destinationLatLng.latitude &&
+        pickupLatLng.longitude > destinationLatLng.longitude) {
+      bounds = LatLngBounds(
+        southwest: destinationLatLng,
+        northeast: pickupLatLng,
+      );
+    } else if (pickupLatLng.longitude > destinationLatLng.longitude) {
+      bounds = LatLngBounds(
+        southwest: LatLng(pickupLatLng.latitude, destinationLatLng.longitude),
+        northeast: LatLng(destinationLatLng.latitude, pickupLatLng.longitude),
+      );
+    } else if (pickupLatLng.latitude > destinationLatLng.latitude) {
+      bounds = LatLngBounds(
+        southwest: LatLng(destinationLatLng.latitude, pickupLatLng.longitude),
+        northeast: LatLng(pickupLatLng.latitude, destinationLatLng.longitude),
+      );
+    } else {
+      bounds = LatLngBounds(
+        southwest: pickupLatLng,
+        northeast: destinationLatLng,
+      );
+    }
+
+    mapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 70));
   }
 
   List<LatLng> polylineCoordinates = [];
