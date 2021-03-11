@@ -55,8 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
         status: 'Getting ready...',
       ),
     );
+
     var details =
         await MapMethods.getDirections(pickupLatLng, destinationLatLng);
+
     Navigator.pop(context);
 
     print(details.encodedPoints);

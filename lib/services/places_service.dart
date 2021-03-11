@@ -84,6 +84,8 @@ class PlacesService extends ChangeNotifier {
       );
 
       Navigator.pop(context, 'getDirections');
+
+      addressPredictionList.clear();
     }
   }
 }

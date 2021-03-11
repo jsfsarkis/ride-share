@@ -31,12 +31,12 @@ class MapMethods {
         'https://maps.googleapis.com/maps/api/directions/json?origin=${startingPosition.latitude},${startingPosition.longitude}&destination=${endPosition.latitude},${endPosition.longitude}&mode=driving&key=$mapKey';
 
     var response = await NetworkService.httpGetRequest(url);
+
     if (response == 'failed') {
       return null;
     }
 
     DirectionsModel directions = DirectionsModel();
-
     directions.durationText =
         response['routes'][0]['legs'][0]['duration']['text'];
     directions.durationValue =

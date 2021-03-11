@@ -30,6 +30,14 @@ class _SearchScreenState extends State<SearchScreen> {
   String searchValue;
 
   @override
+  void deactivate() {
+    super.deactivate();
+    Provider.of<PlacesService>(context, listen: false)
+        .addressPredictionList
+        .clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
     setFocus();
     var placesService = Provider.of<PlacesService>(context);
