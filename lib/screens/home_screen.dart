@@ -8,7 +8,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_share/components/divider_line.dart';
 import 'package:ride_share/components/progress_dialog.dart';
-import 'package:ride_share/components/ride_order_sheet.dart';
+import 'package:ride_share/components/ride_details_sheet.dart';
 import 'package:ride_share/helpers/map_methods.dart';
 import 'package:ride_share/screens/search_screen.dart';
 import 'package:ride_share/services/geocoding_service.dart';
@@ -451,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          RideOrderSheet(),
+          RideDetailsSheet(),
         ],
       ),
     );

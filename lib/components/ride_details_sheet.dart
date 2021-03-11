@@ -4,7 +4,7 @@ import 'package:ride_share/components/rounded_button.dart';
 
 import '../constants.dart';
 
-class RideOrderSheet extends StatelessWidget {
+class RideDetailsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
