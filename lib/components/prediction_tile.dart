@@ -11,25 +11,6 @@ class PredictionTile extends StatelessWidget {
   final AddressPredictionModel addressPrediction;
   PredictionTile({this.addressPrediction});
 
-  // void getPlaceDetails(String placeId, BuildContext context) async {
-  //   String url =
-  //       'https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeId&key=$mapKey';
-  //
-  //   var response = await NetworkService.httpGetRequest(url);
-  //
-  //   if (response == 'failed') {
-  //     return;
-  //   }
-  //
-  //   if (response['status'] == 'OK') {
-  //     AddressModel thisPlace = AddressModel();
-  //     thisPlace.placeName = response['result']['name'];
-  //     thisPlace.id = placeId;
-  //     thisPlace.latitude = response['result']['geometry']['location']['lat'];
-  //     thisPlace.latitude = response['result']['geometry']['location']['lng'];
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     var placesService = Provider.of<PlacesService>(context);

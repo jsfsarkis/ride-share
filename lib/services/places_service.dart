@@ -82,6 +82,8 @@ class PlacesService extends ChangeNotifier {
         latitude: response['result']['geometry']['location']['lat'],
         longitude: response['result']['geometry']['location']['lng'],
       );
+
+      Navigator.pop(context, 'getDirections');
     }
   }
 }

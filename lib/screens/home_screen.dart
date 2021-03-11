@@ -6,9 +6,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_share/components/divider_line.dart';
+import 'package:ride_share/components/progress_dialog.dart';
 import 'package:ride_share/helpers/map_methods.dart';
 import 'package:ride_share/screens/search_screen.dart';
 import 'package:ride_share/services/geocoding_service.dart';
+import 'package:ride_share/services/places_service.dart';
 
 import '../constants.dart';
 
@@ -29,6 +31,37 @@ class _HomeScreenState extends State<HomeScreen> {
   GoogleMapController mapController;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<void> getRouteDetails() async {
+    var pickupAddress =
+        Provider.of<GeocodingService>(context, listen: false).pickupAddress;
+    var destinationAddress =
+        Provider.of<PlacesService>(context, listen: false).destinationAddress;
+
+    var pickupLatLng = LatLng(
+      pickupAddress.latitude,
+      pickupAddress.longitude,
+    );
+
+    var destinationLatLng = LatLng(
+      destinationAddress.latitude,
+      destinationAddress.longitude,
+    );
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => ProgressDialog(
+        status: 'Getting ready...',
+      ),
+    );
+    var details =
+        await MapMethods.getDirections(pickupLatLng, destinationLatLng);
+    Navigator.pop(context);
+
+    print(details.encodedPoints);
+  }
+
   @override
   Widget build(BuildContext context) {
     var geocodingService = Provider.of<GeocodingService>(context);
@@ -214,8 +247,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 20.0),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, SearchScreen.id);
+                      onTap: () async {
+                        var response =
+                            await Navigator.pushNamed(context, SearchScreen.id);
+                        if (response == 'getDirections') {
+                          await getRouteDetails();
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(
