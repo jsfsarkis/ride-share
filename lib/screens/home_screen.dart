@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       Polyline polyline = Polyline(
         polylineId: PolylineId('polyid'),
-        color: Colors.red,
+        color: Colors.deepPurple,
         points: polylineCoordinates,
         jointType: JointType.round,
         width: 4,
@@ -117,10 +117,60 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     mapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 70));
+
+    Marker pickupMarker = Marker(
+      markerId: MarkerId('pickup'),
+      position: pickupLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      infoWindow: InfoWindow(
+        title: pickupAddress.placeName,
+        snippet: 'My Location',
+      ),
+    );
+
+    Marker destinationMarker = Marker(
+      markerId: MarkerId('destination'),
+      position: destinationLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      infoWindow: InfoWindow(
+        title: destinationAddress.placeName,
+        snippet: 'My destination',
+      ),
+    );
+
+    setState(() {
+      _markers.add(pickupMarker);
+      _markers.add(destinationMarker);
+    });
+
+    Circle pickupCircle = Circle(
+      circleId: CircleId('pickup'),
+      strokeColor: Colors.green,
+      strokeWidth: 3,
+      radius: 12,
+      center: pickupLatLng,
+      fillColor: colorGreen,
+    );
+
+    Circle destinationCircle = Circle(
+      circleId: CircleId('destination'),
+      strokeColor: colorAccentPurple,
+      strokeWidth: 3,
+      radius: 12,
+      center: destinationLatLng,
+      fillColor: colorAccentPurple,
+    );
+
+    setState(() {
+      _circles.add(pickupCircle);
+      _circles.add(destinationCircle);
+    });
   }
 
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> _polylines = {};
+  Set<Marker> _markers = {};
+  Set<Circle> _circles = {};
 
   @override
   Widget build(BuildContext context) {
@@ -229,12 +279,14 @@ class _HomeScreenState extends State<HomeScreen> {
             zoomGesturesEnabled: true,
             zoomControlsEnabled: false,
             initialCameraPosition: HomeScreen._kGooglePlex,
+            polylines: _polylines,
+            markers: _markers,
+            circles: _circles,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
               mapController = controller;
               MapMethods.animateMapCamera(MapMethods.position, mapController);
             },
-            polylines: _polylines,
           ),
           Positioned(
             top: MediaQuery.of(context).size.width / 7,
