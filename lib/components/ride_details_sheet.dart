@@ -8,7 +8,9 @@ class RideDetailsSheet extends StatelessWidget {
   double height;
   String tripDistance;
   String tripFare;
-  RideDetailsSheet({this.height, this.tripDistance, this.tripFare});
+  Function onPressed;
+  RideDetailsSheet(
+      {this.height, this.tripDistance, this.tripFare, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +102,7 @@ class RideDetailsSheet extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: RoundedButton(
-                onPressed: () {},
+                onPressed: onPressed,
                 width: MediaQuery.of(context).size.width / 0.1,
                 height: 50.0,
                 fillColor: colorGreen,

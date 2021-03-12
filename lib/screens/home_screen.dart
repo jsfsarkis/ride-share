@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -37,6 +38,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   double rideDetailsSheetHeight = 0;
+
+  double requestRideSheetHeight = 0;
 
   DirectionsModel tripDirectionDetails;
 
@@ -210,6 +213,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         searchSheetHeight = MediaQuery.of(context).size.height / 2.9;
         drawerCanOpen = true;
         MapMethods.animateMapCamera(position, mapController);
+      });
+    }
+
+    void showRequestRideSheet(BuildContext context) {
+      setState(() {
+        rideDetailsSheetHeight = 0;
+        requestRideSheetHeight = MediaQuery.of(context).size.height / 2.9;
+        drawerCanOpen = true;
       });
     }
 
@@ -499,6 +510,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
+
+          // ride details sheet
           Positioned(
             left: 0,
             right: 0,
@@ -507,6 +520,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               vsync: this,
               duration: Duration(milliseconds: 150),
               child: RideDetailsSheet(
+                onPressed: () {
+                  showRequestRideSheet(context);
+                },
                 height: rideDetailsSheetHeight,
                 tripDistance: (tripDirectionDetails != null)
                     ? tripDirectionDetails.distanceText
@@ -514,6 +530,82 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 tripFare: (tripDirectionDetails != null)
                     ? MapMethods.estimateFares(tripDirectionDetails).toString()
                     : '',
+              ),
+            ),
+          ),
+
+          // requesting ride sheet
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnimatedSize(
+              vsync: this,
+              duration: Duration(milliseconds: 150),
+              curve: Curves.easeIn,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 15.0,
+                      spreadRadius: 0.5,
+                      offset: Offset(0.7, 0.7),
+                    ),
+                  ],
+                ),
+                height: requestRideSheetHeight,
+                child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 10.0),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextLiquidFill(
+                          text: 'Requesting a ride...',
+                          waveColor: colorTextSemiLight,
+                          boxBackgroundColor: Colors.white,
+                          textStyle: TextStyle(
+                            color: colorText,
+                            fontSize: 22.0,
+                            fontFamily: BoldFont,
+                          ),
+                          boxHeight: 40.0,
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25.0),
+                          border: Border.all(
+                            width: 1.0,
+                            color: colorLightGrayFair,
+                          ),
+                        ),
+                        child: Icon(Icons.close, size: 25),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: Text(
+                          'Cancel Ride',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
