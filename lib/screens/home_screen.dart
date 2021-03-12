@@ -10,6 +10,7 @@ import 'package:ride_share/components/divider_line.dart';
 import 'package:ride_share/components/progress_dialog.dart';
 import 'package:ride_share/components/ride_details_sheet.dart';
 import 'package:ride_share/helpers/map_methods.dart';
+import 'package:ride_share/models/directions_model.dart';
 import 'package:ride_share/screens/search_screen.dart';
 import 'package:ride_share/services/geocoding_service.dart';
 import 'package:ride_share/services/places_service.dart';
@@ -35,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   double rideDetailsSheetHeight = 0;
+
+  DirectionsModel tripDirectionDetails;
 
   Future<void> getRouteDetails() async {
     var pickupAddress =
@@ -62,6 +65,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     var details =
         await MapMethods.getDirections(pickupLatLng, destinationLatLng);
+
+    setState(() {
+      tripDirectionDetails = details;
+    });
 
     Navigator.pop(context);
 
@@ -477,7 +484,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             child: AnimatedSize(
               vsync: this,
               duration: Duration(milliseconds: 150),
-              child: RideDetailsSheet(height: rideDetailsSheetHeight),
+              child: RideDetailsSheet(
+                height: rideDetailsSheetHeight,
+                tripDistance: (tripDirectionDetails != null)
+                    ? tripDirectionDetails.distanceText
+                    : '',
+                tripFare: (tripDirectionDetails != null)
+                    ? MapMethods.estimateFares(tripDirectionDetails).toString()
+                    : '',
+              ),
             ),
           ),
         ],

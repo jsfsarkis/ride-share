@@ -52,4 +52,18 @@ class MapMethods {
 
     return directions;
   }
+
+  static int estimateFares(DirectionsModel directions) {
+    // km = $0.7
+    // minute = $0.2
+    // base fare = $3
+
+    double baseFare = 3;
+    double distanceFare = (directions.distanceValue / 1000) * 0.3;
+    double timeFare = (directions.durationValue / 60) * 0.2;
+
+    double totalFare = baseFare + distanceFare + timeFare;
+
+    return totalFare.truncate();
+  }
 }

@@ -6,7 +6,9 @@ import '../constants.dart';
 
 class RideDetailsSheet extends StatelessWidget {
   double height;
-  RideDetailsSheet({this.height});
+  String tripDistance;
+  String tripFare;
+  RideDetailsSheet({this.height, this.tripDistance, this.tripFare});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class RideDetailsSheet extends StatelessWidget {
                               TextStyle(fontSize: 18.0, fontFamily: BoldFont),
                         ),
                         Text(
-                          '14km',
+                          tripDistance,
                           style:
                               TextStyle(fontSize: 16.0, color: colorTextLight),
                         ),
@@ -65,7 +67,7 @@ class RideDetailsSheet extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 13.0),
                       child: Text(
-                        '\$13',
+                        '\$$tripFare',
                         style: TextStyle(fontSize: 18.0, fontFamily: BoldFont),
                       ),
                     ),
