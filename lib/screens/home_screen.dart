@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   double rideDetailsSheetHeight = 0;
 
   DirectionsModel tripDirectionDetails;
+
+  bool drawerCanOpen = true;
 
   Future<void> getRouteDetails() async {
     var pickupAddress =
@@ -190,6 +193,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       setState(() {
         searchSheetHeight = 0;
         rideDetailsSheetHeight = MediaQuery.of(context).size.height / 2.9;
+        drawerCanOpen = false;
+      });
+    }
+
+    var mapMethods = Provider.of<MapMethods>(context);
+
+    resetApp() async {
+      Position position = await mapMethods.getCurrentPosition();
+      setState(() {
+        polylineCoordinates.clear();
+        _polylines.clear();
+        _markers.clear();
+        _circles.clear();
+        rideDetailsSheetHeight = 0;
+        searchSheetHeight = MediaQuery.of(context).size.height / 2.9;
+        drawerCanOpen = true;
+        MapMethods.animateMapCamera(position, mapController);
       });
     }
 
@@ -311,7 +331,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             left: MediaQuery.of(context).size.width / 20,
             child: GestureDetector(
               onTap: () {
-                scaffoldKey.currentState.openDrawer();
+                (drawerCanOpen == true)
+                    ? scaffoldKey.currentState.openDrawer()
+                    : resetApp();
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -330,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   backgroundColor: Colors.white,
                   radius: 20,
                   child: Icon(
-                    Icons.menu,
+                    (drawerCanOpen == true) ? Icons.menu : Icons.arrow_back,
                     color: Colors.black87,
                   ),
                 ),
