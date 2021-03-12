@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -567,18 +566,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 10.0),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextLiquidFill(
-                          text: 'Requesting a ride...',
-                          waveColor: colorTextSemiLight,
-                          boxBackgroundColor: Colors.white,
-                          textStyle: TextStyle(
-                            color: colorText,
-                            fontSize: 22.0,
-                            fontFamily: BoldFont,
-                          ),
-                          boxHeight: 40.0,
+                      LinearProgressIndicator(
+                        backgroundColor: Colors.grey,
+                        minHeight: 5,
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'Requesting a ride...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: BoldFont,
+                          color: colorText,
+                          fontSize: 22.0,
                         ),
                       ),
                       SizedBox(height: 20.0),
