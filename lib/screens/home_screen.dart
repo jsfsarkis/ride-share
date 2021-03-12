@@ -28,11 +28,13 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Completer<GoogleMapController> _controller = Completer();
   GoogleMapController mapController;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  double rideDetailsSheetHeight = 0;
 
   Future<void> getRouteDetails() async {
     var pickupAddress =
@@ -176,6 +178,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var geocodingService = Provider.of<GeocodingService>(context);
+    double searchSheetHeight = MediaQuery.of(context).size.height / 2.9;
+    void showDetailsSheet() async {
+      setState(() {
+        searchSheetHeight = 0;
+        rideDetailsSheetHeight = MediaQuery.of(context).size.height / 2.9;
+      });
+    }
+
     return Scaffold(
       key: scaffoldKey,
       drawer: Container(
@@ -320,138 +330,156 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+
+          // search sheet
           Positioned(
             left: 0,
             right: 0,
             bottom: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height / 2.9,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15.0),
-                    topRight: Radius.circular(15.0),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 15.0,
-                        spreadRadius: 0.5,
-                        offset: Offset(
-                          0.7,
-                          0.7,
-                        ))
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 5.0),
-                    Text(
-                      'Nice to see you!',
-                      style: TextStyle(fontSize: 10),
+            child: AnimatedSize(
+              vsync: this,
+              duration: Duration(milliseconds: 150),
+              curve: Curves.easeIn,
+              child: Container(
+                height: searchSheetHeight,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15.0),
+                      topRight: Radius.circular(15.0),
                     ),
-                    Text(
-                      'Where are you going?',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontFamily: BoldFont,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 15.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(
+                            0.7,
+                            0.7,
+                          ))
+                    ]),
+                child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 5.0),
+                      Text(
+                        'Nice to see you!',
+                        style: TextStyle(fontSize: 10),
                       ),
-                    ),
-                    SizedBox(height: 20.0),
-                    GestureDetector(
-                      onTap: () async {
-                        var response =
-                            await Navigator.pushNamed(context, SearchScreen.id);
-                        if (response == 'getDirections') {
-                          await getRouteDetails();
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 5.0,
-                              spreadRadius: 0.5,
-                              offset: Offset(
-                                0.7,
-                                0.7,
-                              ),
-                            ),
-                          ],
+                      Text(
+                        'Where are you going?',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontFamily: BoldFont,
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.search, color: Colors.blueAccent),
-                              SizedBox(width: 10.0),
-                              Text('Search Destination')
+                      ),
+                      SizedBox(height: 20.0),
+                      GestureDetector(
+                        onTap: () async {
+                          var response = await Navigator.pushNamed(
+                              context, SearchScreen.id);
+                          if (response == 'getDirections') {
+                            showDetailsSheet();
+                            await getRouteDetails();
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 5.0,
+                                spreadRadius: 0.5,
+                                offset: Offset(
+                                  0.7,
+                                  0.7,
+                                ),
+                              ),
                             ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.search, color: Colors.blueAccent),
+                                SizedBox(width: 10.0),
+                                Text('Search Destination')
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 22.0),
-                    Row(
-                      children: [
-                        Icon(
-                          OMIcons.home,
-                          color: colorDimText,
-                        ),
-                        SizedBox(width: 12.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Add Home'),
-                            SizedBox(height: 3),
-                            Text(
-                              'Your residential address',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: colorDimText,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.0),
-                    DividerLine(),
-                    SizedBox(height: 16.0),
-                    Row(
-                      children: [
-                        Icon(
-                          OMIcons.workOutline,
-                          color: colorDimText,
-                        ),
-                        SizedBox(width: 12.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Add Work'),
-                            SizedBox(height: 3),
-                            Text(
-                              'Your office address',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: colorDimText,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                      SizedBox(height: 22.0),
+                      Row(
+                        children: [
+                          Icon(
+                            OMIcons.home,
+                            color: colorDimText,
+                          ),
+                          SizedBox(width: 12.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Add Home'),
+                              SizedBox(height: 3),
+                              Text(
+                                'Your residential address',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: colorDimText,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      DividerLine(),
+                      SizedBox(height: 16.0),
+                      Row(
+                        children: [
+                          Icon(
+                            OMIcons.workOutline,
+                            color: colorDimText,
+                          ),
+                          SizedBox(width: 12.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Add Work'),
+                              SizedBox(height: 3),
+                              Text(
+                                'Your office address',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: colorDimText,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-          RideDetailsSheet(),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnimatedSize(
+              vsync: this,
+              duration: Duration(milliseconds: 150),
+              child: RideDetailsSheet(height: rideDetailsSheetHeight),
+            ),
+          ),
         ],
       ),
     );
