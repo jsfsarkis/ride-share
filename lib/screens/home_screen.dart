@@ -225,6 +225,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     rideRef.set(rideMap);
   }
 
+  void cancelRideRequest() {
+    rideRef.remove();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -253,6 +257,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _markers.clear();
         _circles.clear();
         rideDetailsSheetHeight = 0;
+        requestRideSheetHeight = 0;
         searchSheetHeight = MediaQuery.of(context).size.height / 2.9;
         drawerCanOpen = true;
         MapMethods.animateMapCamera(position, mapController);
@@ -627,18 +632,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ),
                       SizedBox(height: 20.0),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25.0),
-                          border: Border.all(
-                            width: 1.0,
-                            color: colorLightGrayFair,
+                      GestureDetector(
+                        onTap: () {
+                          cancelRideRequest();
+                          resetApp();
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25.0),
+                            border: Border.all(
+                              width: 1.0,
+                              color: colorLightGrayFair,
+                            ),
                           ),
+                          child: Icon(Icons.close, size: 25),
                         ),
-                        child: Icon(Icons.close, size: 25),
                       ),
                       Container(
                         width: double.infinity,
