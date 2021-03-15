@@ -14,7 +14,6 @@ class FirebaseMethods {
     userRef.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         currentUserInfo = UserModel.fromSnapshot(snapshot);
-        print('my name is ${currentUserInfo.fullName}');
       }
     });
   }

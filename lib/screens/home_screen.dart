@@ -191,9 +191,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    print(1);
     FirebaseMethods.getCurrentUserInfo();
-    print(2);
   }
 
   @override

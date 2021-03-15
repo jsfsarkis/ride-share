@@ -72,7 +72,8 @@ class RegistrationScreen extends StatelessWidget {
       };
       newUserRef.set(userMap);
 
-      Navigator.pushNamed(context, HomeScreen.id);
+      Navigator.pushNamedAndRemoveUntil(
+          context, HomeScreen.id, (Route<dynamic> route) => false);
     }
   }
 
