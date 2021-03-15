@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_share/helpers/map_methods.dart';
+import 'package:ride_share/screens/registration_screen.dart';
 import 'package:ride_share/services/geocoding_service.dart';
-
-import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splash_screen';
@@ -32,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await geocodingService.reverseGeocoding(position, context);
 
       if (geocodingService.pickupAddress != null) {
-        Navigator.pushNamed(context, HomeScreen.id);
+        Navigator.pushNamed(context, RegistrationScreen.id);
       }
     });
   }

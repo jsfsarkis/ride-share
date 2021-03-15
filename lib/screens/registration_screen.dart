@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:ride_share/components/general_textfield.dart';
 import 'package:ride_share/components/progress_dialog.dart';
 import 'package:ride_share/components/rounded_button.dart';
+import 'package:ride_share/screens/home_screen.dart';
 import 'package:ride_share/screens/login_screen.dart';
 
 import '../constants.dart';
@@ -70,6 +71,8 @@ class RegistrationScreen extends StatelessWidget {
         'phone': phoneNumberController.text,
       };
       newUserRef.set(userMap);
+
+      Navigator.pushNamed(context, HomeScreen.id);
     }
   }
 

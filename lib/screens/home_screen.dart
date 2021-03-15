@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:ride_share/components/divider_line.dart';
 import 'package:ride_share/components/progress_dialog.dart';
 import 'package:ride_share/components/ride_details_sheet.dart';
+import 'package:ride_share/helpers/firebase_methods.dart';
 import 'package:ride_share/helpers/map_methods.dart';
 import 'package:ride_share/models/directions_model.dart';
 import 'package:ride_share/screens/search_screen.dart';
@@ -186,6 +187,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Set<Polyline> _polylines = {};
   Set<Marker> _markers = {};
   Set<Circle> _circles = {};
+
+  @override
+  void initState() {
+    super.initState();
+    print(1);
+    FirebaseMethods.getCurrentUserInfo();
+    print(2);
+  }
 
   @override
   Widget build(BuildContext context) {
