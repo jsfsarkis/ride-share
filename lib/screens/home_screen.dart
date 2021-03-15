@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:ride_share/components/divider_line.dart';
 import 'package:ride_share/components/progress_dialog.dart';
 import 'package:ride_share/components/ride_details_sheet.dart';
+import 'package:ride_share/global_variables.dart';
 import 'package:ride_share/helpers/firebase_methods.dart';
 import 'package:ride_share/helpers/map_methods.dart';
 import 'package:ride_share/models/directions_model.dart';
@@ -44,6 +46,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   DirectionsModel tripDirectionDetails;
 
   bool drawerCanOpen = true;
+
+  DatabaseReference rideRef;
 
   Future<void> getRouteDetails() async {
     var pickupAddress =
@@ -188,6 +192,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Set<Marker> _markers = {};
   Set<Circle> _circles = {};
 
+  void createRideRequest() {
+    rideRef =
+        FirebaseDatabase.instance.reference().child('rideRequests').push();
+    var pickupAddress =
+        Provider.of<GeocodingService>(context, listen: false).pickupAddress;
+    var destinationAddress =
+        Provider.of<PlacesService>(context, listen: false).destinationAddress;
+
+    Map pickupMap = {
+      'latitude': pickupAddress.latitude.toString(),
+      'longitude': pickupAddress.longitude.toString(),
+    };
+
+    Map destinationMap = {
+      'latitude': destinationAddress.latitude.toString(),
+      'longitude': destinationAddress.longitude.toString(),
+    };
+
+    Map rideMap = {
+      'created_at': DateTime.now().toString(),
+      'rider_name': currentUserInfo.fullName,
+      'rider_phone': currentUserInfo.phoneNumber,
+      'pickup_address': pickupAddress.placeName,
+      'destination_address': destinationAddress.placeName,
+      'location': pickupMap,
+      'destination': destinationMap,
+      'payment_method': 'card',
+      'driver_id': 'waiting',
+    };
+
+    rideRef.set(rideMap);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -228,6 +265,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         requestRideSheetHeight = MediaQuery.of(context).size.height / 2.9;
         drawerCanOpen = true;
       });
+
+      createRideRequest();
     }
 
     return Scaffold(
