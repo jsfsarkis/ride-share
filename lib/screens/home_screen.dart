@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   void createRideRequest() {
     rideRef =
-        FirebaseDatabase.instance.reference().child('rideRequests').push();
+        FirebaseDatabase.instance.reference().child('ride-requests').push();
     var pickupAddress =
         Provider.of<GeocodingService>(context, listen: false).pickupAddress;
     var destinationAddress =
@@ -214,10 +214,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       'created_at': DateTime.now().toString(),
       'rider_name': currentUserInfo.fullName,
       'rider_phone': currentUserInfo.phoneNumber,
-      'pickup_address': pickupAddress.placeName,
-      'destination_address': destinationAddress.placeName,
-      'location': pickupMap,
-      'destination': destinationMap,
+      'pickup_address_name': pickupAddress.placeName,
+      'pickup_info': pickupMap,
+      'destination_address_name': destinationAddress.placeName,
+      'destination_info': destinationMap,
       'payment_method': 'card',
       'driver_id': 'waiting',
     };
