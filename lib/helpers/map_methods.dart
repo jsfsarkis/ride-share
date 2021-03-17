@@ -2,7 +2,9 @@ import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ride_share/constants.dart';
+import 'package:ride_share/helpers/geofire_helper.dart';
 import 'package:ride_share/models/directions_model.dart';
+import 'package:ride_share/models/nearby_driver_model.dart';
 import 'package:ride_share/services/network_service.dart';
 
 class MapMethods {
@@ -84,18 +86,27 @@ class MapMethods {
 
         switch (callBack) {
           case Geofire.onKeyEntered:
+            NearbyDriverModel nearbyDriver = NearbyDriverModel();
+            nearbyDriver.key = map['key'];
+            nearbyDriver.latitude = map['latitude'];
+            nearbyDriver.longitude = map['longitude'];
+            GeofireHelper.nearbyDriversList.add(nearbyDriver);
             break;
 
           case Geofire.onKeyExited:
+            GeofireHelper.removeDriverFromList(map['key']);
             break;
 
           case Geofire.onKeyMoved:
-            //
+            NearbyDriverModel nearbyDriver = NearbyDriverModel();
+            nearbyDriver.key = map['key'];
+            nearbyDriver.latitude = map['latitude'];
+            nearbyDriver.longitude = map['longitude'];
+            GeofireHelper.updateDriverLocation(nearbyDriver);
             break;
 
           case Geofire.onGeoQueryReady:
-            //
-            print(map['result']);
+            print(GeofireHelper.nearbyDriversList.length);
             break;
         }
       }
