@@ -1,3 +1,4 @@
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ride_share/constants.dart';
@@ -19,10 +20,11 @@ class MapMethods {
   static void animateMapCamera(
     Position position,
     GoogleMapController mapController,
-  ) {
+  ) async {
     LatLng pos = LatLng(position.latitude, position.longitude);
     CameraPosition cameraPosition = CameraPosition(target: pos, zoom: 14.0);
     mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    await startGeofireListener();
   }
 
   static Future<DirectionsModel> getDirections(
@@ -65,5 +67,38 @@ class MapMethods {
     double totalFare = baseFare + distanceFare + timeFare;
 
     return totalFare.truncate();
+  }
+
+  static void startGeofireListener() async {
+    Geofire.initialize('driversAvailable');
+
+    Position currentPosition = await MapMethods().getCurrentPosition();
+
+    Geofire.queryAtLocation(
+            currentPosition.latitude, currentPosition.longitude, 20)
+        .listen((map) {
+      print(map);
+
+      if (map != null) {
+        var callBack = map['callBack'];
+
+        switch (callBack) {
+          case Geofire.onKeyEntered:
+            break;
+
+          case Geofire.onKeyExited:
+            break;
+
+          case Geofire.onKeyMoved:
+            //
+            break;
+
+          case Geofire.onGeoQueryReady:
+            //
+            print(map['result']);
+            break;
+        }
+      }
+    });
   }
 }
