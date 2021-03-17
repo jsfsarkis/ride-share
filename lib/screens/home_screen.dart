@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,8 +14,10 @@ import 'package:ride_share/components/progress_dialog.dart';
 import 'package:ride_share/components/ride_details_sheet.dart';
 import 'package:ride_share/global_variables.dart';
 import 'package:ride_share/helpers/firebase_methods.dart';
+import 'package:ride_share/helpers/geofire_helper.dart';
 import 'package:ride_share/helpers/map_methods.dart';
 import 'package:ride_share/models/directions_model.dart';
+import 'package:ride_share/models/nearby_driver_model.dart';
 import 'package:ride_share/screens/search_screen.dart';
 import 'package:ride_share/services/geocoding_service.dart';
 import 'package:ride_share/services/places_service.dart';
@@ -48,6 +51,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool drawerCanOpen = true;
 
   DatabaseReference rideRef;
+
+  bool nearbyDriversKeysLoaded = false;
 
   Future<void> getRouteDetails() async {
     var pickupAddress =
@@ -192,6 +197,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Set<Marker> _markers = {};
   Set<Circle> _circles = {};
 
+  void animateMapCamera(
+    Position position,
+    GoogleMapController mapController,
+  ) async {
+    LatLng pos = LatLng(position.latitude, position.longitude);
+    CameraPosition cameraPosition = CameraPosition(target: pos, zoom: 14.0);
+    mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    startGeofireListener();
+  }
+
   void createRideRequest() {
     rideRef =
         FirebaseDatabase.instance.reference().child('ride-requests').push();
@@ -229,6 +244,78 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     rideRef.remove();
   }
 
+  void startGeofireListener() async {
+    Geofire.initialize('driversAvailable');
+
+    Position currentPosition = await MapMethods().getCurrentPosition();
+
+    Geofire.queryAtLocation(
+            currentPosition.latitude, currentPosition.longitude, 20)
+        .listen((map) {
+      print(map);
+
+      if (map != null) {
+        var callBack = map['callBack'];
+
+        switch (callBack) {
+          case Geofire.onKeyEntered:
+            NearbyDriverModel nearbyDriver = NearbyDriverModel();
+            nearbyDriver.key = map['key'];
+            nearbyDriver.latitude = map['latitude'];
+            nearbyDriver.longitude = map['longitude'];
+
+            GeofireHelper.nearbyDriversList.add(nearbyDriver);
+
+            if (nearbyDriversKeysLoaded) {
+              updateDriversOnMap();
+            }
+            break;
+
+          case Geofire.onKeyExited:
+            GeofireHelper.removeDriverFromList(map['key']);
+            updateDriversOnMap();
+            break;
+
+          case Geofire.onKeyMoved:
+            NearbyDriverModel nearbyDriver = NearbyDriverModel();
+            nearbyDriver.key = map['key'];
+            nearbyDriver.latitude = map['latitude'];
+            nearbyDriver.longitude = map['longitude'];
+            GeofireHelper.updateDriverLocation(nearbyDriver);
+            updateDriversOnMap();
+            break;
+
+          case Geofire.onGeoQueryReady:
+            nearbyDriversKeysLoaded = true;
+            updateDriversOnMap();
+            break;
+        }
+      }
+    });
+  }
+
+  void updateDriversOnMap() {
+    setState(() {
+      _markers.clear();
+    });
+    Set<Marker> tempMarkers = Set<Marker>();
+    for (NearbyDriverModel driver in GeofireHelper.nearbyDriversList) {
+      LatLng driverPosition = LatLng(driver.latitude, driver.longitude);
+
+      Marker thisMarker = Marker(
+        markerId: MarkerId('driver${driver.key}'),
+        position: driverPosition,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        rotation: MapMethods.generateRandomNumber(360),
+      );
+
+      tempMarkers.add(thisMarker);
+    }
+    setState(() {
+      _markers = tempMarkers;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -260,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         requestRideSheetHeight = 0;
         searchSheetHeight = MediaQuery.of(context).size.height / 2.9;
         drawerCanOpen = true;
-        MapMethods.animateMapCamera(position, mapController);
+        animateMapCamera(position, mapController);
       });
     }
 
@@ -384,7 +471,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
               mapController = controller;
-              MapMethods.animateMapCamera(MapMethods.position, mapController);
+              animateMapCamera(MapMethods.position, mapController);
             },
           ),
           Positioned(
