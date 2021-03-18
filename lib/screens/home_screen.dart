@@ -197,6 +197,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Set<Marker> _markers = {};
   Set<Circle> _circles = {};
 
+  BitmapDescriptor nearbyDriverIcon;
+
   void animateMapCamera(
     Position position,
     GoogleMapController mapController,
@@ -305,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Marker thisMarker = Marker(
         markerId: MarkerId('driver${driver.key}'),
         position: driverPosition,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        icon: nearbyDriverIcon,
         rotation: MapMethods.generateRandomNumber(360),
       );
 
@@ -316,6 +318,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
+  void createMarker() {
+    if (nearbyDriverIcon == null) {
+      ImageConfiguration imageConfiguration =
+          createLocalImageConfiguration(context, size: Size(2, 2));
+
+      BitmapDescriptor.fromAssetImage(
+        imageConfiguration,
+        'assets/images/car_android.png',
+      ).then((icon) {
+        nearbyDriverIcon = icon;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -324,6 +340,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    createMarker();
     var geocodingService = Provider.of<GeocodingService>(context);
     double searchSheetHeight = MediaQuery.of(context).size.height / 2.9;
     void showDetailsSheet() async {
